@@ -1,8 +1,8 @@
 # didumean
 
-![ci](https://github.com/mashiike/urlio/workflows/Go/badge.svg)
-[![Documentation](https://godoc.org/github.com/mashiike/urlio?status.svg)](http://godoc.org/github.com/mashiike/urlio)
-[![Go Report Card](https://goreportcard.com/badge/github.com/mashiike/urlio)](https://goreportcard.com/report/github.com/mashiike/urlio)
+![ci](https://github.com/mashiike/didumean/workflows/Test/badge.svg)
+[![Documentation](https://godoc.org/github.com/mashiike/didumean?status.svg)](http://godoc.org/github.com/mashiike/didumean)
+[![Go Report Card](https://goreportcard.com/badge/github.com/mashiike/didumean)](https://goreportcard.com/report/github.com/mashiike/didumean)
 
 
 go flag package wrapper, for did you mean function
