@@ -38,14 +38,13 @@ func TestFlagSet(t *testing.T) {
 
 	for _, c := range cases {
 		t.Run(strings.Join(c.arguments, "_"), func(t *testing.T) {
-			flagSet := flag.NewFlagSet("testing", flag.ContinueOnError)
+			flagSet := didumean.NewFlagSet("testing", flag.ContinueOnError)
 			var val int
 			flagSet.IntVar(&val, "hoge", 0, "hogehoge")
 			flagSet.IntVar(&val, "piyo", 0, "piyopiyo")
 			flagSet.IntVar(&val, "fuga", 0, "fugafuga")
 
-			dflags := didumean.NewFlagSet(flagSet)
-			err := dflags.Parse(c.arguments)
+			err := flagSet.Parse(c.arguments)
 			errStr := ""
 			if err != nil {
 				errStr = err.Error()

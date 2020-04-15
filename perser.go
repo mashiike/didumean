@@ -11,15 +11,22 @@ import (
 	"github.com/agnivade/levenshtein"
 )
 
+//FlagSet is *flag.FlagSet wrapper with did you mean function.
 type FlagSet struct {
-	orig          *flag.FlagSet
+	*flag.FlagSet
+
 	errorHandling flag.ErrorHandling
 	output        io.Writer
 }
 
-func NewFlagSet(orig *flag.FlagSet) *FlagSet {
+//NewFlagSet create wraped FlagSet
+func NewFlagSet(name string, handling flag.ErrorHandling) *FlagSet {
+	return wrapFlagSet(flag.NewFlagSet(name, handling))
+}
+
+func wrapFlagSet(orig *flag.FlagSet) *FlagSet {
 	return &FlagSet{
-		orig: orig,
+		FlagSet: orig,
 	}
 }
 
@@ -30,8 +37,8 @@ const (
 
 //Parse as flag.FlagSet.Parse with did you mean.
 func (f *FlagSet) Parse(arguments []string) error {
-	f.errorHandling = f.orig.ErrorHandling()
-	f.orig.Init(f.orig.Name(), flag.ContinueOnError)
+	f.errorHandling = f.FlagSet.ErrorHandling()
+	f.FlagSet.Init(f.FlagSet.Name(), flag.ContinueOnError)
 
 	err := f.parse(arguments)
 
@@ -48,10 +55,10 @@ func (f *FlagSet) Parse(arguments []string) error {
 
 func (f *FlagSet) parse(arguments []string) error {
 	var buf bytes.Buffer
-	f.output = f.orig.Output()
-	f.orig.SetOutput(&buf)
+	f.output = f.FlagSet.Output()
+	f.FlagSet.SetOutput(&buf)
 
-	err := f.orig.Parse(arguments)
+	err := f.FlagSet.Parse(arguments)
 	msg := buf.String()
 	defer func() {
 		if f.output != nil {
@@ -65,11 +72,11 @@ func (f *FlagSet) parse(arguments []string) error {
 	if !strings.HasPrefix(err.Error(), trapErrorString) {
 		return err
 	}
-	invalidFlag := arguments[len(arguments)-f.orig.NArg()-1]
+	invalidFlag := arguments[len(arguments)-f.FlagSet.NArg()-1]
 	invalidFlag = strings.TrimPrefix(strings.TrimPrefix(invalidFlag, "-"), "-")
 	minDistance := len(invalidFlag) + 1
 	minFlag := ""
-	f.orig.VisitAll(func(fl *flag.Flag) {
+	f.FlagSet.VisitAll(func(fl *flag.Flag) {
 		distance := levenshtein.ComputeDistance(invalidFlag, fl.Name)
 		if distance < threshold && distance < minDistance {
 			minDistance = distance
@@ -87,6 +94,6 @@ func (f *FlagSet) parse(arguments []string) error {
 
 //Parse as flag.Parse with did you mean.
 func Parse() {
-	set := NewFlagSet(flag.CommandLine)
+	set := wrapFlagSet(flag.CommandLine)
 	set.Parse(os.Args[1:])
 }
