@@ -29,5 +29,15 @@ func main() {
 }
 ```
 
+example execution:
+```
+$ ./example -none hoge
+flag provided but not defined: -none, did you mean -name
+Usage of ./example:
+  -name string
+        name parameter (default "noname")
+```
+
+
 ## LICENSE
 MIT
