@@ -41,7 +41,9 @@ func (f *FlagSet) Parse(arguments []string) error {
 	f.FlagSet.Init(f.FlagSet.Name(), flag.ContinueOnError)
 
 	err := f.parse(arguments)
-
+	if err == nil {
+		return nil
+	}
 	switch f.errorHandling {
 	case flag.ContinueOnError:
 		return err

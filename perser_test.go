@@ -62,3 +62,6 @@ func TestFlagSet(t *testing.T) {
 		})
 	}
 }
+func TestParse(t *testing.T) {
+	didumean.Parse()
+}
