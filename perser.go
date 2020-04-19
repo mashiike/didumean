@@ -66,6 +66,7 @@ func (f *FlagSet) parse(arguments []string) error {
 		if f.output != nil {
 			io.WriteString(f.output, msg)
 		}
+		f.FlagSet.SetOutput(f.output)
 	}()
 	if err == nil {
 		return nil
