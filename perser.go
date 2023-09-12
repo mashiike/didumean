@@ -11,7 +11,7 @@ import (
 	"github.com/agnivade/levenshtein"
 )
 
-//FlagSet is *flag.FlagSet wrapper with did you mean function.
+// FlagSet is *flag.FlagSet wrapper with did you mean function.
 type FlagSet struct {
 	*flag.FlagSet
 
@@ -19,7 +19,7 @@ type FlagSet struct {
 	output        io.Writer
 }
 
-//NewFlagSet create wraped FlagSet
+// NewFlagSet create wraped FlagSet
 func NewFlagSet(name string, handling flag.ErrorHandling) *FlagSet {
 	return wrapFlagSet(flag.NewFlagSet(name, handling))
 }
@@ -35,7 +35,7 @@ const (
 	threshold       = 3
 )
 
-//Parse as flag.FlagSet.Parse with did you mean.
+// Parse as flag.FlagSet.Parse with did you mean.
 func (f *FlagSet) Parse(arguments []string) error {
 	f.errorHandling = f.FlagSet.ErrorHandling()
 	f.FlagSet.Init(f.FlagSet.Name(), flag.ContinueOnError)
@@ -48,6 +48,9 @@ func (f *FlagSet) Parse(arguments []string) error {
 	case flag.ContinueOnError:
 		return err
 	case flag.ExitOnError:
+		if err == flag.ErrHelp {
+			os.Exit(0)
+		}
 		os.Exit(2)
 	case flag.PanicOnError:
 		panic(err)
@@ -95,7 +98,7 @@ func (f *FlagSet) parse(arguments []string) error {
 	return err
 }
 
-//Parse as flag.Parse with did you mean.
+// Parse as flag.Parse with did you mean.
 func Parse() {
 	set := wrapFlagSet(flag.CommandLine)
 	set.Parse(os.Args[1:])
