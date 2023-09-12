@@ -2,19 +2,21 @@ name: Test
 on:
   push:
     branches:
-      - master
+      - main
       - feature/**
   pull_request:
     branches:
-      - master
+      - main
       - feature/**
 jobs:
   test:
     strategy:
       matrix:
         go:
-          - 1.13
-          - 1.14
+          - "1.13"
+          - "1.19"
+          - "1.20"
+          - "1.21"
     name: Build
     runs-on: ubuntu-latest
     steps:
